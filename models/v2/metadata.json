@@ -1,0 +1,21 @@
+{
+    "algorithm": "LightGBM",
+    "features": [
+        "Airline",
+        "Source",
+        "Destination",
+        "stops",
+        "month",
+        "day",
+        "departure_hour",
+        "departure_minute",
+        "arrival_hour",
+        "arrival_minute",
+        "minutes"
+    ],
+    "trained_at": "2026-11-05T23:34:46.618952+00:00",
+    "validation_r2": 0.7931899504553173,
+    "validation_mae": 1254.0957536888802,
+    "validation_rmse": 1778.3754763905808,
+    "version": "v2"
+}

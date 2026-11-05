@@ -1,0 +1,21 @@
+{
+    "algorithm": "Random Forest",
+    "features": [
+        "Airline",
+        "Source",
+        "Destination",
+        "stops",
+        "month",
+        "day",
+        "departure_hour",
+        "departure_minute",
+        "arrival_hour",
+        "arrival_minute",
+        "minutes"
+    ],
+    "trained_at": "2026-11-05T23:34:46.398831+00:00",
+    "validation_r2": 0.7596414352814826,
+    "validation_mae": 1255.8382926024756,
+    "validation_rmse": 1917.2000980319788,
+    "version": "v3"
+}

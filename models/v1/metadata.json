@@ -1,0 +1,21 @@
+{
+    "algorithm": "CatBoost",
+    "features": [
+        "Airline",
+        "Source",
+        "Destination",
+        "stops",
+        "month",
+        "day",
+        "departure_hour",
+        "departure_minute",
+        "arrival_hour",
+        "arrival_minute",
+        "minutes"
+    ],
+    "trained_at": "2026-11-05T23:34:57.452003+00:00",
+    "validation_r2": 0.7493882287644884,
+    "validation_mae": 1365.881700196444,
+    "validation_rmse": 1957.664991521386,
+    "version": "v1"
+}

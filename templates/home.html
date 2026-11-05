@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight Price Prediction</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+
+<body>
+    <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand" href="{{ url_for('home') }}">FLIGHT PRICE</a>
+    </nav>
+
+    <div class="container mt-4">
+        <form action="{{ url_for('predict') }}" method="post">
+            <div class="row">
+                <div class="col-sm-6 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <label for="Dep_Time" class="card-title font-weight-bold">Departure Date</label>
+                            <input type="datetime-local" name="Dep_Time" id="Dep_Time"
+                                value="{{ form_values.get('Dep_Time', '') }}" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <label for="Arrival_Time" class="card-title font-weight-bold">Arrival Date</label>
+                            <input type="datetime-local" name="Arrival_Time" id="Arrival_Time"
+                                value="{{ form_values.get('Arrival_Time', '') }}" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <label for="Source" class="card-title font-weight-bold">Source</label>
+                            <select name="Source" id="Source" class="form-control" required>
+                                <option value="">Select source</option>
+                                {% for source in sources %}
+                                <option value="{{ source }}" {% if form_values.get('Source')==source %}selected{% endif
+                                    %}>{{ source }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <label for="Destination" class="card-title font-weight-bold">Destination</label>
+                            <select name="Destination" id="Destination" class="form-control" required>
+                                <option value="">Select destination</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <label for="airline" class="card-title font-weight-bold">Which airline do you want to
+                                travel?</label>
+                            <select name="airline" id="airline" class="form-control" required>
+                                <option value="">Select airline</option>
+
+                                {% for airline in flight_options %}
+                                <option value="{{ airline }}" {% if form_values.get('Airline')==airline %}selected{%
+                                    endif %}>{{ airline }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <label for="stops" class="card-title font-weight-bold">Stopage</label>
+                            <select name="stops" id="stops" class="form-control" required>
+                                <option value="">Select stops</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <input type="submit" value="Predict price" class="btn btn-secondary">
+        </form>
+
+        {% if error_text %}<div class="alert alert-danger mt-3" role="alert">{{ error_text }}</div>{% endif %}
+        {% if prediction_text %}<h3 class="mt-3">{{ prediction_text }}</h3>{% endif %}
+
+    </div>
+
+    <script>
+        // Flask builds these combinations from train.csv. There are no hardcoded flight lists.
+        const flights = {{ flight_options | tojson }};
+        const previous = {{ form_values | tojson }};
+        const source = document.getElementById('Source');
+        const destination = document.getElementById('Destination');
+        const airline = document.getElementById('airline');
+        const stops = document.getElementById('stops');
+
+        function unique(values) {
+            return [...new Set(values)].sort((a, b) =>
+                typeof a === 'number' ? a - b : a.localeCompare(b)
+            );
+        }
+
+        function fill(select, values, placeholder, selected, label = value => value) {
+            select.replaceChildren(new Option(placeholder, ''));
+            values.forEach(value => select.add(new Option(label(value), String(value))));
+            if (selected !== undefined && selected !== null) {
+                select.value = String(selected);
+            }
+            if (!values.some(value => String(value) === select.value)) {
+                select.value = '';
+            }
+        }
+
+        function updateStops(selected) {
+            const values = unique(flights
+                .filter(f => f.Source === source.value &&
+                    f.Destination === destination.value &&
+                    f.Airline === airline.value)
+                .map(f => f.stops));
+            fill(stops, values, 'Select stops', selected,
+                n => n === 0 ? 'Non-stop' : `${n} stop${n === 1 ? '' : 's'}`);
+        }
+
+        function updateAirlines(selectedAirline, selectedStops) {
+            const values = unique(flights
+                .filter(f => f.Source === source.value && f.Destination === destination.value)
+                .map(f => f.Airline));
+            fill(airline, values, 'Select airline', selectedAirline);
+            updateStops(selectedStops);
+        }
+
+        function updateDestinations(selectedDestination, selectedAirline, selectedStops) {
+            const values = unique(flights
+                .filter(f => f.Source === source.value)
+                .map(f => f.Destination));
+            fill(destination, values, 'Select destination', selectedDestination);
+            updateAirlines(selectedAirline, selectedStops);
+        }
+
+        source.addEventListener('change', () => updateDestinations());
+        destination.addEventListener('change', () => updateAirlines());
+        airline.addEventListener('change', () => updateStops());
+
+        // Restore valid selections after submitting the form.
+        updateDestinations(previous.Destination, previous.airline, previous.stops);
+    </script>
+</body>
+
+</html>
