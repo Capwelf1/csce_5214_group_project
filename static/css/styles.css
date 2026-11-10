@@ -14,3 +14,33 @@ a {
 a:hover {
     color: #f0f0f0;
   }
+
+.prediction-result {
+    max-width: 560px;
+    margin: 28px auto;
+    padding: 24px;
+    text-align: center;
+    background: #fff;
+    border: 1px solid #cde3e5;
+    border-radius: 14px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+.prediction-label {
+    color: #52666a;
+    font-size: 15px;
+}
+
+.prediction-price {
+    margin: 6px 0 14px;
+    color: #155e63;
+    font-size: 36px;
+    font-weight: 700;
+}
+
+.prediction-interval {
+    padding-top: 14px;
+    border-top: 1px solid #e3eeee;
+    color: #52666a;
+    font-size: 15px;
+}
