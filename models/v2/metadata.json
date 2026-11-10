@@ -13,9 +13,13 @@
         "arrival_minute",
         "minutes"
     ],
-    "trained_at": "2026-11-05T23:34:46.618952+00:00",
-    "validation_r2": 0.7931899504553173,
-    "validation_mae": 1254.0957536888802,
-    "validation_rmse": 1778.3754763905808,
+    "trained_at": "2026-11-09T21:11:14.892018+00:00",
+    "validation_r2": 0.7823268966809651,
+    "validation_mae": 1285.459407819836,
+    "validation_rmse": 1824.4838608486,
+    "prediction_interval": {
+        "coverage": 0.9,
+        "margin": 5104.244214798928
+    },
     "version": "v2"
 }
