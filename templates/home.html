@@ -14,8 +14,18 @@
         <a class="navbar-brand" href="{{ url_for('home') }}">FLIGHT PRICE</a>
     </nav>
 
-    <div class="container mt-4">
-        <form action="{{ url_for('predict') }}" method="post">
+    
+<div class="container mt-4">
+
+    <!-- Task 2: Display validation errors -->
+    {% if error_text %}
+    <div class="alert alert-danger" role="alert">
+        <strong>Invalid Flight Information!</strong>
+        <p class="mb-0">{{ error_text }}</p>
+    </div>
+    {% endif %}
+
+    <form action="{{ url_for('predict') }}" method="post">
             <div class="row">
                 <div class="col-sm-6 mb-3">
                     <div class="card">
